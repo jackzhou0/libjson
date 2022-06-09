@@ -6,7 +6,7 @@
 
     <groupId>org.chinagcd</groupId>
     <artifactId>libjson</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>lib-json</name>
