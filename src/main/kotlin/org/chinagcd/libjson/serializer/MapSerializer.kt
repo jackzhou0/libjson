@@ -24,10 +24,10 @@ class MapSerializer(feature: SerializeFeature) : Serializer, SerializerDispatche
                 shouldNewLine(item)
             )
             if (shouldRecursive(item)) {
-                str += calcIndent(indent + 1) + toJSONKey(key).plus(": ")
+                str += calcIndent(indent + 1) + toJSONKey(key).plus(keySplitor(feature.pretty))
                     .plus(dispatch(key, item, indent + 1, false))
             } else {
-                str += calcIndent(indent + 1) + toJSONKey(key) + ": " + toJSONValue(item)
+                str += calcIndent(indent + 1) + toJSONKey(key) + keySplitor(feature.pretty) + toJSONValue(item)
             }
             str += if (index != keys.size - 1) "," else ""
         }

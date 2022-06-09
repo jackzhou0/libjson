@@ -28,11 +28,11 @@ class ObjectSerializer(feature: SerializeFeature): Serializer, SerializerDispatc
                 val item = field.get(value)
                 str += (if (index == fields.size - 1 && str.trim() != "{" && !str.trim().endsWith(",")) "," else "").plus(shouldNewLine(item) )
                 if (shouldRecursive(item)) {
-                    str += calcIndent(indent + 1) + toJSONKey(field.name).plus(": ")
+                    str += calcIndent(indent + 1) + toJSONKey(field.name).plus(keySplitor(feature.pretty))
                         .plus(dispatch(field.name, item, indent + 1, false))
                 } else {
 
-                    str += calcIndent(indent + 1) + toJSONKey(computeName(field)) + ": " + toJSONValue(item)
+                    str += calcIndent(indent + 1) + toJSONKey(computeName(field)) + keySplitor(feature.pretty) + toJSONValue(item)
                 }
                 str += if (index != fields.size - 1) "," else ""
             }
