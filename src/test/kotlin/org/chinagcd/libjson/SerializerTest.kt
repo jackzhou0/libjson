@@ -1,9 +1,8 @@
 package org.chinagcd.libjson
 
-import org.chinagcd.libjson.vo.AnnotationVo
-import org.chinagcd.libjson.vo.TreeVo
-import org.chinagcd.libjson.vo.UserRecord
+import org.chinagcd.libjson.vo.*
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.text.SimpleDateFormat
@@ -216,6 +215,22 @@ class SerializerTest {
         annotationVo.sex = 11
         val nestedMap = mapOf(Pair("aa", "aa"), Pair("bb", null), Pair("cc", "cc"), Pair("obj", annotationVo))
 
+        val user = User()
+        user.id = 1
+        val nonGenericMap = HashMap<Any, Any>()
+        nonGenericMap["name"] = "aa"
+        nonGenericMap[Date()] = "haha"
+        nonGenericMap[true] = "active"
+        nonGenericMap[123] = "amount"
+        // 测试对象作为key的场景
+        nonGenericMap[user] = "user"
+        // 测试html的场景
+        nonGenericMap["html"] = "<html><head><title>test</title></head><div>adf</div></html>"
+        var multiGenericVo = MultiGenericVo<String, Long, Boolean, List<String>, Set<Long>, Date, Float>().init();
+        val html = "<html><head><title>test</title></head><div>adf</div></html>"
+        val pattern = "^<[^>]+>.*<[^>]+>$|^<[^/>]+(\\\\/>|>)$"
+        System.err.println(html.matches(Regex(pattern)))
+
         val map = mapOf(
             p1, p2, p3, p4, p5, p6, p7, Pair(
                 "ca", arrayListOf<Any>(
@@ -225,6 +240,7 @@ class SerializerTest {
                             setOf(
                                 1,
                                 2,
+                                multiGenericVo,
                                 p8,
                                 p9,
                                 null,
@@ -236,6 +252,7 @@ class SerializerTest {
                                     Pair("bb2", null)
                                 ),
                                 root,
+                                multiGenericVo,
                                 arrayOf(1, 2, 3),
                                 byteArrayOf(1, 2, 3, 4, 5),
                                 shortArrayOf(5, 6, 6),
@@ -247,10 +264,31 @@ class SerializerTest {
                                 booleanArrayOf(true, false, true, false, true),
                                 BigDecimal("10123412312312312312312300.12"),
                                 BigInteger("10123123123123123123123123123123123123123123122312300"),
-                                listOf<Any>(1, 2, 3),
-                                setOf<Any>(1, 2, 3),
-                                mapOf<Any, Any>(Pair("aa", 1), Pair("bb", 2)),
-                                hashMapOf<Any, Any>(Pair("aa", 1), Pair("bb", 2), Pair("nested", nestedMap)),
+                                listOf<Any>(
+                                    1,
+                                    2,
+                                    3,
+                                    multiGenericVo,
+                                    listOf(multiGenericVo),
+                                    hashSetOf(multiGenericVo),
+                                    arrayListOf(multiGenericVo)
+                                ),
+                                setOf<Any>(
+                                    1,
+                                    2,
+                                    3,
+                                    multiGenericVo,
+                                    listOf(multiGenericVo),
+                                    hashSetOf(multiGenericVo),
+                                    arrayListOf(multiGenericVo, arrayOf(user))
+                                ),
+                                mapOf<Any, Any>(Pair("aa", multiGenericVo), Pair("bb", 2)),
+                                hashMapOf<Any, Any>(
+                                    Pair("aa", 1),
+                                    Pair("bb", 2),
+                                    Pair("haha", multiGenericVo),
+                                    Pair("nested", nestedMap)
+                                ),
                                 hashMapOf(Pair("name", Hashtable<String, Any>()), Pair("tree", root))
                             )
                         )
@@ -258,8 +296,8 @@ class SerializerTest {
                 )
             )
         )
+        File("/Users/XUGANG/Desktop/result.json").writeText(JSON().pretty(true).stringify(map))
         localEquals(map)
-
 
         val concurrentHashMap = ConcurrentHashMap<Any, Any>()
         concurrentHashMap.putAll(map)
@@ -284,14 +322,19 @@ class SerializerTest {
         System.err.println(JSON().stringify(r))
     }
 
+    @Test
+    fun testMultiTimes() {
+        for (i in 0..100) {
+            testMap()
+        }
+    }
+
     // 测试的具体方法
 
     private fun localEquals(data: Any?) {
         data?.let {
             // 如果可以正常解析，则说明序列化没有问题
             val json = JSON().stringify(data)
-//            System.err.println(json)
-//            System.err.println(JSON().pretty().stringify(data))
             if (json == "" || json == "null") {
                 System.err.println("null or empty string")
                 return
@@ -300,8 +343,6 @@ class SerializerTest {
             if (!valid(json)) {
                 throw AssertionError("不是有效的json：$json")
             }
-//            System.err.println(JSON().pretty().stringify(data))
-//            println(jsonPretty(json))
             if (JSON().pretty().stringify(data) != jsonPretty(json)) {
                 throw AssertionError("json格式化有问题：$json")
             }
