@@ -42,7 +42,7 @@ public class MultiGenericVo<A, B, C, D, E, F, G> {
         u1.c = true;
         u1.d = Arrays.asList("a", "b", "c");
         u1.e = Set.of(1L,2L,3L,4L);
-        u1.map = Map.of(100L, Set.of(1L,2L,3L), 200L, Set.of(11L,22L,33L));
+        u1.map = Map.of(100L, Set.of(1L,2L,3L));
         u1.list = List.of(1.0f, 2.0f);
         u1.sets = Set.of(
                 List.of(Map.of(toDate("2021-01-12"), List.of(new HashSet<>(List.of(1.0f, 2.0f, 3.0f))))),
@@ -55,7 +55,7 @@ public class MultiGenericVo<A, B, C, D, E, F, G> {
         u2.c = false;
         u2.d = Arrays.asList("a", "b", "c");
         u2.e = Set.of(1L,2L,3L,4L);
-        u2.map = Map.of(100L, Set.of(1L,2L,3L), 200L, Set.of(11L,22L,33L));
+        u2.map = Map.of(101L, Set.of(1L,2L,3L));
         u2.list = List.of(1.0f, 2.0f);
         u2.sets = Set.of(
                 List.of(Map.of(toDate("2021-01-12"), List.of(new HashSet<>(List.of(1.0f, 2.0f, 3.0f))))),
