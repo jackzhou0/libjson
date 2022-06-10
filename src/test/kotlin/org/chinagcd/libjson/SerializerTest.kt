@@ -319,7 +319,7 @@ class SerializerTest {
     @Test
     fun testRecord() {
         var r = UserRecord(1, "aa", "bb")
-        System.err.println(JSON().stringify(r))
+        localEquals(r)
     }
 
     @Test
