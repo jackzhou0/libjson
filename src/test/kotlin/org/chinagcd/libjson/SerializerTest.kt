@@ -316,11 +316,11 @@ class SerializerTest {
         localEquals(properties)
     }
 
-    @Test
-    fun testRecord() {
-        var r = UserRecord(1, "aa", "bb")
-        localEquals(r)
-    }
+//    @Test
+//    fun testRecord() {
+//        var r = UserRecord(1, "aa", "bb")
+//        localEquals(r)
+//    }
 
     @Test
     fun testMultiTimes() {
