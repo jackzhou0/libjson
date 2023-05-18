@@ -10,8 +10,5 @@
         <module name="libjson" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="libjson" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
