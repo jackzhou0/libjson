@@ -144,6 +144,7 @@ open class SerializerDispatcher {
                 value is Number ||
                 value is Boolean ||
                 value is Char ||
+                value is Enum<*> ||
                 value is Date ||
                 value is Timestamp ||
                 value is LocalDate ||
